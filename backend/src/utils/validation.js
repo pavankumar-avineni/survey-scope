@@ -30,7 +30,7 @@ function validate(schema, data) {
     const validated = schema.parse(data);
     return { success: true, data: validated, errors: null };
   } catch (error) {
-    const errors = error.errors.map(err => ({
+    const errors = error.issues.map(err => ({
       field: err.path.join('.'),
       message: err.message,
     }));
