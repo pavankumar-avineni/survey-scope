@@ -1,6 +1,9 @@
 const { z } = require('zod');
 
-// Question type specific config schemas
+// ==============================
+// Base Config Schemas
+// ==============================
+
 const baseConfigSchema = z.object({
   description: z.string().optional(),
 });
@@ -47,8 +50,11 @@ const dropdownConfigSchema = baseConfigSchema.extend({
   })).min(1, 'At least one option is required'),
 });
 
-// Question validation schema
-const createQuestionSchema = z.object({
+// ==============================
+// Base Question Schema (NO refine)
+// ==============================
+
+const baseQuestionSchema = z.object({
   type: z.enum([
     'short_text', 'long_text', 'single_choice', 'multi_choice', 
     'rating', 'date', 'email', 'number', 'dropdown', 'yes_no'
@@ -56,8 +62,13 @@ const createQuestionSchema = z.object({
   label: z.string().min(1, 'Question label is required').max(500),
   is_required: z.boolean().default(false),
   config: z.record(z.any()).default({}),
-}).superRefine((data, ctx) => {
-  // Validate config based on question type
+});
+
+// ==============================
+// Create Question Schema (WITH refine)
+// ==============================
+
+const createQuestionSchema = baseQuestionSchema.superRefine((data, ctx) => {
   try {
     switch (data.type) {
       case 'single_choice':
@@ -79,11 +90,10 @@ const createQuestionSchema = z.object({
         dropdownConfigSchema.parse(data.config);
         break;
       default:
-        // No additional validation needed
         break;
     }
   } catch (error) {
-    error.errors.forEach(err => {
+    error.errors?.forEach(err => {
       ctx.addIssue({
         path: ['config', ...err.path],
         message: err.message,
@@ -92,7 +102,15 @@ const createQuestionSchema = z.object({
   }
 });
 
-const updateQuestionSchema = createQuestionSchema.partial();
+// ==============================
+// Update Question Schema (NO refine)
+// ==============================
+
+const updateQuestionSchema = baseQuestionSchema.partial();
+
+// ==============================
+// Survey Schemas
+// ==============================
 
 const createSurveySchema = z.object({
   title: z.string().min(1, 'Survey title is required').max(255),
@@ -107,9 +125,17 @@ const createSurveySchema = z.object({
 
 const updateSurveySchema = createSurveySchema.partial();
 
+// ==============================
+// Other Schemas
+// ==============================
+
 const reorderQuestionsSchema = z.object({
   questionIds: z.array(z.string().uuid()).min(1, 'At least one question ID is required'),
 });
+
+// ==============================
+// Exports
+// ==============================
 
 module.exports = {
   createQuestionSchema,

@@ -12,10 +12,6 @@ const publicSubmissionLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => {
-    // Use IP address as the rate limit key
-    return req.ip;
-  },
 });
 
 module.exports = {
