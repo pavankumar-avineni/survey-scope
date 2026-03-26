@@ -4,33 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "migrate:latest": "knex migrate:latest --knexfile knexfile.js",
-    "migrate:rollback": "knex migrate:rollback --knexfile knexfile.js",
-    "migrate:make": "knex migrate:make --knexfile knexfile.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.3.1",
-    "helmet": "^8.1.0",
-    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.3",
-    "knex": "^3.2.5",
-    "morgan": "^1.10.1",
-    "pg": "^8.20.0",
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@types/json2csv": "^5.0.7",
-    "nodemon": "^3.1.14"
+    "pg": "^8.20.0"
   }
 }
